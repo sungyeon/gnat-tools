@@ -1,0 +1,44 @@
+diff --git a/bootstrap.sh b/bootstrap.sh
+index e2a94a35..9f912d2d 100755
+--- a/bootstrap.sh
++++ b/bootstrap.sh
+@@ -107,10 +107,18 @@ then
+ 	mkdir -p "$DESTDIR$prefix$libexecdir"/gprbuild
+ 	mkdir -p "$DESTDIR$prefix$datarootdir"/gprconfig
+ 	mkdir -p "$DESTDIR$prefix$datarootdir"/gpr
++if [ "$UNAME" == "Linux" ] ; then
++    install -m0755 $bin_progs -t "$DESTDIR$prefix$bindir"
++    install -m0755 $lib_progs -t "$DESTDIR$prefix$libexecdir"/gprbuild
++    install -m0644 "$srcdir"/share/gprconfig/*.xml -t "$DESTDIR$prefix$datarootdir"/gprconfig
++    install -m0644 "$srcdir"/share/gprconfig/*.ent -t "$DESTDIR$prefix$datarootdir"/gprconfig
++    install -m0644 "$srcdir"/share/_default.gpr "$DESTDIR$prefix$datarootdir"/gpr/_default.gpr
++elif [ "$UNAME" == "Darwin" ] ; then
++    install -m0755 $bin_progs "$DESTDIR$prefix$bindir"
++    install -m0755 $lib_progs "$DESTDIR$prefix$libexecdir"/gprbuild
++    install -m0644 "$srcdir"/share/gprconfig/*.xml "$DESTDIR$prefix$datarootdir"/gprconfig
++    install -m0644 "$srcdir"/share/gprconfig/*.ent "$DESTDIR$prefix$datarootdir"/gprconfig
++    install -m0644 "$srcdir"/share/_default.gpr "$DESTDIR$prefix$datarootdir"/gpr/_default.gpr
++fi
+ 
+-	install -m0755 $bin_progs -t "$DESTDIR$prefix$bindir"
+-	install -m0755 $lib_progs -t "$DESTDIR$prefix$libexecdir"/gprbuild
+-	install -m0644 "$srcdir"/share/gprconfig/*.xml -t "$DESTDIR$prefix$datarootdir"/gprconfig
+-	install -m0644 "$srcdir"/share/gprconfig/*.ent -t "$DESTDIR$prefix$datarootdir"/gprconfig
+-	install -m0644 "$srcdir"/share/_default.gpr "$DESTDIR$prefix$datarootdir"/gpr/_default.gpr
+ fi
+diff --git a/gpr/src/gpr_imports.c b/gpr/src/gpr_imports.c
+index b73f63a1..84ffa0cd 100644
+--- a/gpr/src/gpr_imports.c
++++ b/gpr/src/gpr_imports.c
+@@ -167,6 +167,11 @@ const char *__gnat_default_libgcc_subdir = "lib";
+     //  return (sb.st_mtim.tv_sec - ada_epoch_offset) * 1E9
+     //  + sb.st_mtim.tv_nsec;
+     // with check overflow below
++#if defined(__APPLE__) || defined(__NetBSD__) 
++#define st_atim st_atimespec
++#define st_ctim st_ctimespec
++#define st_mtim st_mtimespec
++#endif
+ 
+     if (__builtin_ssubll_overflow(sb.st_mtim.tv_sec, ada_epoch_offset, &result)) {
+       return LLONG_MIN;
