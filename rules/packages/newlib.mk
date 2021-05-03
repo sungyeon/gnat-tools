@@ -20,6 +20,7 @@ define $(PKG)_BUILD
 	$(CONFIG_OPTS)                      \
 	--host=$($(1)_HOST_OPT)             \
     --target=$($(1)_TARGET_OPT)         \
+	--srcdir=$(SRC_DIR)/$($(1)_SUBDIR)  \
 	$($(1)_CONFIG_ARCH_OPTS)
 	$(MAKE) -C $($(1)_BUILD_DIR)
     $(MAKE) -C $($(1)_BUILD_DIR) install
