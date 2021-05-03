@@ -11,12 +11,12 @@ $(PKG)_BUILD_DIR2       := $(BUILD_DIR)/$($(PKG)_SUBDIR)_$(HOST)_$(TARGET)_2
 # host system detection
 GCC_BUILD_HOST_OPT:= $(shell uname -m)-apple-darwin$(shell uname -r)
 
-# target options
+# target specific options
 ifeq ($(TARGET),aarch64)
 $(PKG)_TARGET_OPT       := aarch64-eabi
 $(PKG)_CONFIG_ARCH_OPTS += --disable-libssp --enable-interwork --enable-multilib --with-multilib-list=default
 $(PKG)_BUILD_OPT        +=
-CFLAGS_FOR_TARGET       += -DARM -D__ARM__ -D__ARM64__
+CFLAGS_FOR_TARGET       +=
 CXXFLAGS_FOR_TARGET     += $(CFLAGS_FOR_TARGET)
 endif
 
@@ -24,7 +24,7 @@ ifeq ($(TARGET),arm)
 $(PKG)_TARGET_OPT       := arm-eabi
 $(PKG)_CONFIG_ARCH_OPTS += --disable-libssp --enable-interwork --enable-multilib --with-multilib-list=rmprofile,aprofile
 $(PKG)_BUILD_OPT        +=
-CFLAGS_FOR_TARGET       += -DARM -D__ARM__ -D__ARM32__
+CFLAGS_FOR_TARGET       +=
 CXXFLAGS_FOR_TARGET     += $(CFLAGS_FOR_TARGET)
 endif
 
@@ -122,7 +122,7 @@ define $(PKG)_BUILD_first
     @echo Building $(1) package for $(HOST) host and $(TARGET) architecture
     mkdir -p $($(1)_BUILD_DIR1)
     cd $($(1)_BUILD_DIR1) &&                                \
-    CC=$(CC) CXX=$(CXX) $(SRC_DIR)/$($(1)_SUBDIR)/configure \
+    $(SRC_DIR)/$($(1)_SUBDIR)/configure \
     --host=$($(1)_HOST_OPT)                                 \
     --target=$($(1)_TARGET_OPT)                             \
     --build=$($(1)_BUILD_OPT)                               \
@@ -193,5 +193,6 @@ define $(PKG)_BUILD_final
     --with-sysroot=$(INSTALL_DIR)/$($(1)_TARGET_OPT)        \
     "--with-pkgversion=$(TOOLS_VERSION)"
     $(MAKE1) -C $($(1)_BUILD_DIR2)
+	$(MAKE1) -C $($(1)_BUILD_DIR2)/gcc cross-gnattools ada.all.cross
     $(MAKE1) -C $($(1)_BUILD_DIR2) install
 endef
