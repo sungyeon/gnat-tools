@@ -71,7 +71,7 @@ define PULL_PKG_SOURCE
         $(foreach pkg,$(PKGS), echo -n "Checking $(pkg) ... " && cd $(SRC_DIR)/$(pkg) && $(GIT_PULL);)
 endef
 
-.PHONY: all get-pkgs build clean help clobber build-setup
+.PHONY: all get-pkgs build clean help config clobber build-setup build-stage1 build-gcc-stage1 build-gcc-final build-utils build-libc
 
 all: help
 
@@ -130,6 +130,11 @@ build-gcc-stage1:
 	@echo "End gcc stage #1"
 	@echo ""
 
+build-libc:
+	@echo Build for libc
+	@echo package lists: $(BUILD_LISTS_LIBC)
+	@for pkg in $(BUILD_LISTS_LIBC);do $(MAKE1) -f $(MAKEFILE) build-pkg-$$pkg; done
+
 build-gcc-final:
 	@echo ""
 	@echo "Build final gcc"
@@ -139,18 +144,25 @@ build-gcc-final:
 	@echo "End final gcc"
 	@echo ""
 
-build: build-setup build-stage1
+build-utils:
+	@echo ""
+	@echo "Build utilities"
+	@echo ""
+	@for pkg in $(BUILD_UTILS);do $(MAKE1) -f $(MAKEFILE) build-pkg-$$pkg; done
 
-# rebuild entire packages
-rebuild-all:
-	@echo rebuild all system
-
-build-all:
-	rm -rf build
+build:
+	@rm -rf $(BUILD_DIR)
 	@$(MAKE1) -f $(MAKEFILE) build-setup
+	@$(MAKE1) -f $(MAKEFILE) get-pkgs
+	@$(MAKE1) -f $(MAKEFILE) build-stage1
+	@$(MAKE1) -f $(MAKEFILE) build-gcc-stage1
+	@$(MAKE1) -f $(MAKEFILE) build-libc
+	@$(MAKE1) -f $(MAKEFILE) build-gcc-final
+	@$(MAKE1) -f $(MAKEFILE) build-utils
 
 clean:
 	@echo clean build outputs ... done!
+	@rm -rf $(BUILD_DIR)
 
 clobber:
 	@echo Delete all source and build directory!!
@@ -164,7 +176,6 @@ help:
 	@echo "Usage:make [options] build HOST=host_name TARGET=target_architecture"
 	@echo "host_name lists: "
 	@echo "osx     for Mac OSX"
-	@echo "win32   for Windows"
 	@echo "linux64 for Linux 64bit"
 	@echo ""
 	@echo "target_architecture lists:"

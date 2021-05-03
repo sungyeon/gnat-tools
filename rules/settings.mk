@@ -1,25 +1,27 @@
 # settings.mk - configuration file for V2X framework
 
 # Build packages
-BUILD_LISTS  :=		\
-	zlib        	\
-    gmp         	\
-    mpfr        	\
-    mpc         	\
-    isl         	\
-	binutils    	\
+BUILD_LISTS  :=     \
+	zlib            \
+    gmp             \
+    mpfr            \
+    mpc             \
+    isl             \
+    binutils        \
 
-BUILD_LISTS_2 :=	\
-	gcc				\
-	newlib
+BUILD_LISTS_GCC :=  \
+    gcc
+
+BUILD_LISTS_LIBC := \
+    newlib
 
 BUILD_UTILS :=      \
     xmlada          \
-	gprconfig_kb    \
-	gprbuild
+    gprconfig_kb    \
+    gprbuild
 
 # Packages
-PKGS := $(BUILD_LISTS) $(BUILD_LISTS_2) $(BUILD_UTILS)
+PKGS := $(BUILD_LISTS) $(BUILD_LISTS_GCC) $(BUILD_LISTS_LIBC) $(BUILD_UTILS)
 
 ###############################################################################
 # Build system configurations
