@@ -1,0 +1,89 @@
+: use /bin/sh
+
+# config.tgt - script to configure build environment
+
+echo "
+**************************************
+**  GNAT tools build configuration  **
+**************************************
+"
+
+case `echo 'xx\c'` in
+*c*)	ECHON=-n; ECHOC= ;;
+*)	ECHON= ;  ECHOC="\c" ;;
+esac
+
+getans()
+{
+    ans=""
+    echo $ECHON "$*$ECHOC"
+
+    while read line
+    do
+        case "$line" in
+        "!")
+            sh -i
+            echo "  "
+            ;;
+        !*)
+            line=`echo "$line" | sed 's/^.//'`
+            sh -c "$line"
+            ;;
+        *)
+            ans="$line"
+            return 0
+            ;;
+        esac
+
+        echo $ECHON "$*$ECHOC"
+    done
+    return 1
+}
+
+host_list="osx linux";
+host_os=osx
+
+while :
+do
+getans "
+Which host system do you want to build [$host_list]? "
+    case "$ans" in
+    osx)
+        host_os=osx 
+        break
+        ;;
+    linux)
+        host_os=Linux64
+        break
+        ;;
+    *)
+        echo "Unknown host type !!"
+        ;;
+    esac
+done
+
+target_list="arm"
+target=arm
+
+while :
+do
+getans "
+Which target processor do you have [$target_list]? "
+    case "$ans" in
+    arm)
+        target=arm
+        break
+        ;;
+    *)
+        echo "Unknown target !!"
+        ;;
+    esac
+done
+
+# generate config file
+echo "# build configuration"                             > .config.mk
+echo "HOST     = $host_os"                              >> .config.mk
+echo "TARGET   = $target"                               >> .config.mk
+echo " "                                                >> .config.mk
+echo "# Export configured build environment variables"  >> .config.mk
+echo "export HOST TARGET"                               >> .config.mk
