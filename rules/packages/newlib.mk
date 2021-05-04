@@ -14,14 +14,20 @@ endif
 
 define $(PKG)_BUILD
     @echo Building $(1) package for $(HOST) host $(TARGET) architecture
-	mkdir -p $($(1)_BUILD_DIR)
-    cd $($(1)_BUILD_DIR) &&       		\
-	$(SRC_DIR)/$($(1)_SUBDIR)/configure \
-	$(CONFIG_OPTS)                      \
-	--host=$($(1)_HOST_OPT)             \
-    --target=$($(1)_TARGET_OPT)         \
-	--srcdir=$(SRC_DIR)/$($(1)_SUBDIR)  \
+	rm -rf $($(1)_BUILD_DIR)
+    cp -rf $(SRC_DIR)/$($(1)_SUBDIR) $($(1)_BUILD_DIR)
+	cd $($(1)_BUILD_DIR) &&       						\
+	$(SRC_DIR)/$($(1)_SUBDIR)/configure 				\
+	$(CONFIG_OPTS)                      				\
+	--host=$($(1)_HOST_OPT)             				\
+    --target=$($(1)_TARGET_OPT)         				\
+	--enable-newlib-io-long-long                        \
+	--enable-newlib-io-c99-formats                      \
+	--enable-newlib-reent-check-verify                  \
+	--enable-newlib-register-fini                       \
+	--enable-newlib-retargetable-locking                \
+	--disable-newlib-supplied-syscalls                  \
+	--disable-nls                                       \
 	$($(1)_CONFIG_ARCH_OPTS)
-	$(MAKE) -C $($(1)_BUILD_DIR)
-    $(MAKE) -C $($(1)_BUILD_DIR) install
+	cd $($(1)_BUILD_DIR) && $(MAKE1) all install
 endef
