@@ -150,10 +150,19 @@ build-utils:
 	@echo ""
 	@for pkg in $(BUILD_UTILS);do $(MAKE1) -f $(MAKEFILE) build-pkg-$$pkg; done
 
-build:
+rebuild:
 	@rm -rf $(BUILD_DIR)
 	@$(MAKE1) -f $(MAKEFILE) build-setup
 	@$(MAKE1) -f $(MAKEFILE) get-pkgs
+	@$(MAKE1) -f $(MAKEFILE) build-stage1
+	@$(MAKE1) -f $(MAKEFILE) build-gcc-stage1
+	@$(MAKE1) -f $(MAKEFILE) build-libc
+	@$(MAKE1) -f $(MAKEFILE) build-gcc-final
+	@$(MAKE1) -f $(MAKEFILE) build-utils
+
+build:
+	@rm -rf $(BUILD_DIR)
+	@$(MAKE1) -f $(MAKEFILE) build-setup
 	@$(MAKE1) -f $(MAKEFILE) build-stage1
 	@$(MAKE1) -f $(MAKEFILE) build-gcc-stage1
 	@$(MAKE1) -f $(MAKEFILE) build-libc

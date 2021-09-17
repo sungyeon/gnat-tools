@@ -1,6 +1,6 @@
-# binutils.mk - makefile for binutils
-PKG              := binutils
-$(PKG)_VERSION   := binutils-2_37
+# gdb.mk - makefile for gdb
+PKG              := gdb
+$(PKG)_VERSION   := gdb-11.1-release
 $(PKG)_SUBDIR    := $(PKG)
 $(PKG)_URL       := https://sourceware.org/git/binutils-gdb.git
 $(PKG)_BRANCH    := $($(PKG)_VERSION)
@@ -49,8 +49,8 @@ $(PKG)_BUILD_OPT        :=
 endif
 
 ifeq ($(TARGET),ppc)
-$(PKG)_CONFIG_ARCH_OPTS := --enable-multilib --enable-poison-system-directories
 $(PKG)_TARGET_OPT       := powerpc-elf
+$(PKG)_CONFIG_ARCH_OPTS := --enable-multilib --enable-poison-system-directories --enable-64-bit-bfd
 $(PKG)_BUILD_OPT        :=
 endif
 
@@ -75,16 +75,13 @@ define $(PKG)_BUILD
     --disable-nls                                                           \
     --disable-werror                                                        \
     --disable-shared                                                        \
-    --disable-gdb                                                           \
+    --disable-thread                                                        \
     --enable-plugins                                                        \
-    --enable-expat                                                          \
-    --enable-gold                                                           \
-    --enable-lto                                                            \
-    --enable-target=all                                                     \
-    --with-expat                                                            \
-    --with-libexpat-prefix=$(LIB_DIR)                                       \
-    --with-sysroot=$(INSTALL_DIR)/$($(1)_HOST_OPT)                          \
+    --without-babeltrace \
+    --without-guile      \
+    --without-lzma       \
+    --with-expat         \
     "--with-pkgversion=$(TOOLS_VERSION)"
-    $(MAKE) -C $($(1)_BUILD_DIR)
-    $(MAKE) -C $($(1)_BUILD_DIR) install
+    $(MAKE) -C $($(1)_BUILD_DIR) all-gdb
+    $(MAKE) -C $($(1)_BUILD_DIR) install-gdb
 endef

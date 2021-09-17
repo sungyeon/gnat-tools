@@ -2,12 +2,13 @@
 
 # Build packages
 BUILD_LISTS  :=     \
-	zlib            \
+    zlib            \
     gmp             \
     mpfr            \
     mpc             \
     isl             \
     binutils        \
+    gdb             \
 
 BUILD_LISTS_GCC :=  \
     gcc
@@ -39,22 +40,13 @@ endif
 # build host specific tools.
 # If you want to change versions of toolchain and utility, modify following BUILD_HOST_XXX variables:
 
-#ifeq ($(BUILD_HOST),osx)
-#BUILD_HOST_CC     := gcc-10
-#BUILD_HOST_CXX    := g++-10
-#BUILD_HOST_CPP    := cpp-10
-#BUILD_HOST_AR     := gcc-ar-10
-#BUILD_HOST_NM     := gcc-nm-10
-#BUILD_HOST_RANLIB := gcc-ranlib-10
-#endif
-
 ifeq ($(BUILD_HOST),osx)
-BUILD_HOST_CC     := gcc
-BUILD_HOST_CXX    := g++
+BUILD_HOST_CC     := x86_64-apple-darwin15-gcc
+BUILD_HOST_CXX    := x86_64-apple-darwin15-g++
 BUILD_HOST_CPP    := cpp
-BUILD_HOST_AR     := gcc-ar
-BUILD_HOST_NM     := gcc-nm
-BUILD_HOST_RANLIB := gcc-ranlib
+BUILD_HOST_AR     := x86_64-apple-darwin15-gcc-ar
+BUILD_HOST_NM     := x86_64-apple-darwin15-gcc-nm
+BUILD_HOST_RANLIB := x86_64-apple-darwin15-gcc-ranlib
 endif
 
 ifneq (,$(findstring linux64, $(BUILD_HOST)))

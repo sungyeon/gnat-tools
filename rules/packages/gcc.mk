@@ -1,7 +1,7 @@
 # gcc.mk - makefile for gcc
 
 PKG                     := gcc
-$(PKG)_VERSION          := releases/gcc-10.3.0
+$(PKG)_VERSION          := releases/gcc-11.2.0
 $(PKG)_SUBDIR           := $(PKG)
 $(PKG)_URL              := https://gcc.gnu.org/git/gcc.git
 $(PKG)_BRANCH           := $($(PKG)_VERSION)
@@ -171,16 +171,16 @@ define $(PKG)_BUILD_final
     --disable-nls                                           \
     --disable-shared                                        \
     --disable-tls                                           \
-	--enable-plugins                                        \
-	--disable-threads                                       \
-	--disable-libada                                        \
-	--enable-languages=c,c++,ada                            \
+    --enable-plugins                                        \
+    --disable-threads                                       \
+    --disable-libada                                        \
+    --enable-languages=c,c++,ada                            \
     --enable-poison-system-directories                      \
     --enable-__cxa_atexit                                   \
     --with-gnu-as                                           \
     --with-gnu-ld                                           \
     --with-newlib                                           \
-	--with-headers=yes                                      \
+    --with-headers=yes                                      \
     --with-gmp=$(LIB_DIR)                                   \
     --with-mpfr=$(LIB_DIR)                                  \
     --with-mpc=$(LIB_DIR)                                   \
@@ -193,6 +193,6 @@ define $(PKG)_BUILD_final
     --with-sysroot=$(INSTALL_DIR)/$($(1)_TARGET_OPT)        \
     "--with-pkgversion=$(TOOLS_VERSION)"
     $(MAKE1) -C $($(1)_BUILD_DIR2)
-	$(MAKE1) -C $($(1)_BUILD_DIR2)/gcc cross-gnattools ada.all.cross
+    $(MAKE1) -C $($(1)_BUILD_DIR2)/gcc cross-gnattools ada.all.cross
     $(MAKE1) -C $($(1)_BUILD_DIR2) install
 endef

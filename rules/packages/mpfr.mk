@@ -12,15 +12,15 @@ $(PKG)_BUILD_OPT := $(BUILD_HOST_OPT)
 
 define $(PKG)_BUILD
     @echo Building $(1) package for $(HOST) host $(TARGET) architecture
-	mkdir -p $($(1)_BUILD_DIR) && 		\
+    mkdir -p $($(1)_BUILD_DIR) && 		\
     cd $($(1)_BUILD_DIR) &&       		\
-	CC=$(CC) CXX=$(CXX) 				\
-	$(SRC_DIR)/$($(1)_SUBDIR)/configure \
-	$(LIB_OPTS)							\
-	--host=$($(1)_HOST_OPT)             \
-	--target=$(TARGET_OPT)              \
-	--build=$($(1)_BUILD_OPT)           \
-	--with-gmp=$(LIB_DIR)
+    CC=$(CC) CXX=$(CXX) 				\
+    $(SRC_DIR)/$($(1)_SUBDIR)/configure \
+    $(LIB_OPTS)							\
+    --host=$($(1)_HOST_OPT)             \
+    --target=$(TARGET_OPT)              \
+    --build=$($(1)_BUILD_OPT)           \
+    --with-gmp=$(LIB_DIR)
     $(MAKE) -C $($(1)_BUILD_DIR)
     $(MAKE) -C $($(1)_BUILD_DIR) install
 endef

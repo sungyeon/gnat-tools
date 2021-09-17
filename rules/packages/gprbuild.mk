@@ -12,12 +12,12 @@ $(PKG)_BUILD_OPT := $(BUILD_HOST_OPT)
 
 define $(PKG)_BUILD
     @echo Building $(1) package for $(HOST) host $(TARGET) architecture
-	rm -rf $($(1)_BUILD_DIR) &&                              \
-	cp -rf $(SRC_DIR)/$($(1)_SUBDIR) $($(1)_BUILD_DIR) &&    \
+    rm -rf $($(1)_BUILD_DIR) &&                              \
+    cp -rf $(SRC_DIR)/$($(1)_SUBDIR) $($(1)_BUILD_DIR) &&    \
     cd $($(1)_BUILD_DIR) &&       						     \
-	git apply $(PKG_DIR)/gpr_imports_macos.patch &&          \
-	./bootstrap.sh --with-xmlada=$(SRC_DIR)/$(xmlada_SUBDIR) --with-kb=$(SRC_DIR)/$(gprconfig_kb_SUBDIR) --prefix=$(BUILD_DIR)/gprbuild_bootstrap && \
-	export PATH=$(BUILD_DIR)/gprbuild_bootstrap:"$(PATH)" && \
-	$(MAKE1) prefix=$(INSTALL_DIR) setup && \
-	$(MAKE1) all install
+    git apply $(PKG_DIR)/gpr_imports_macos.patch &&          \
+    ./bootstrap.sh --with-xmlada=$(SRC_DIR)/$(xmlada_SUBDIR) --with-kb=$(SRC_DIR)/$(gprconfig_kb_SUBDIR) --prefix=$(BUILD_DIR)/gprbuild_bootstrap && \
+    export PATH=$(BUILD_DIR)/gprbuild_bootstrap:"$(PATH)" && \
+    $(MAKE1) prefix=$(INSTALL_DIR) setup && \
+    $(MAKE1) all install
 endef
