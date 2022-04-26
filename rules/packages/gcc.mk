@@ -1,7 +1,7 @@
 # gcc.mk - makefile for gcc
 
 PKG                     := gcc
-$(PKG)_VERSION          := releases/gcc-11.2.0
+$(PKG)_VERSION          := releases/gcc-11.3.0
 $(PKG)_SUBDIR           := $(PKG)
 $(PKG)_URL              := https://gcc.gnu.org/git/gcc.git
 $(PKG)_BRANCH           := $($(PKG)_VERSION)

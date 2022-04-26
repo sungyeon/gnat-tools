@@ -1,6 +1,6 @@
 # binutils.mk - makefile for binutils
 PKG              := binutils
-$(PKG)_VERSION   := binutils-2_37
+$(PKG)_VERSION   := binutils-2_38
 $(PKG)_SUBDIR    := $(PKG)
 $(PKG)_URL       := https://sourceware.org/git/binutils-gdb.git
 $(PKG)_BRANCH    := $($(PKG)_VERSION)
