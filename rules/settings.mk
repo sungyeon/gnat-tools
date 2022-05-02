@@ -1,4 +1,4 @@
-# settings.mk - configuration file for V2X framework
+# settings.mk - configuration file for build framework
 
 # Build packages
 BUILD_LISTS  :=     \
